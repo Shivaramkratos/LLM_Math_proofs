@@ -1,0 +1,1829 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=28mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!40!black,citecolor=blue!40!black,urlcolor=blue!40!black]{hyperref}
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Comet}{\mathsf{C}}
+\newcommand{\Kite}{\mathsf{K}}
+\newcommand{\LL}{\mathcal L_n}
+\setlist[enumerate]{itemsep=3pt,topsep=5pt}
+\hypersetup{pdftitle={Eventual minimizers of the adjacency spectral gap in trees and connected graphs},pdfauthor={},pdfsubject={Symmetric double comets and double kites}}
+\title{\bfseries Eventual minimizers of the adjacency spectral gap\\in trees and connected graphs}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+The adjacency spectral gap of a connected graph is the difference between
+its two largest adjacency eigenvalues. We prove that, for every sufficiently
+large order, every tree minimizing this gap is a symmetric double comet,
+and every connected graph minimizing it is a symmetric double kite.
+These results establish the eventual forms of the conjectures of
+Jovovi\'c, Koledin and Stani\'c for trees and of Stani\'c for connected
+graphs. The number of leaves at each terminal vertex of a minimizing
+tree, and the order of each terminal clique of a minimizing graph, are
+asymptotic to $n/(2\log n)$.
+The proofs combine resistance bounds with comparisons against explicit
+families. For trees, nodal components identify two dominant vertices, and
+a Schur complement forces their degrees to agree before an exact path
+comparison eliminates all other branches. For graphs, a centered second
+eigenvector gives a constant vertex budget, from which two dense cores are
+extracted. A comparison at fixed order removes exceptional vertices and
+multiple attachments; a uniform completion argument forces both cores to
+be cliques. All auxiliary estimates needed for these reductions are proved.
+\end{abstract}
+\noindent\textbf{Keywords.} Adjacency spectral gap; extremal graphs; trees;
+double comets; double kites; Perron vector; Schur complement.\\
+\textbf{Mathematics Subject Classification (2020).} 05C50, 05C05, 15A18.
+
+\section{Introduction}
+
+\subsection{Notation and the extremal problems}
+All graphs are finite, simple and undirected. The order of a graph $G$ is
+$n=|V(G)|$, and its adjacency matrix is $A(G)$. We write its eigenvalues as
+\[
+ \lambda_1(G)\ge\lambda_2(G)\ge\cdots\ge\lambda_n(G).
+\]
+For a connected graph of order at least two, its \emph{adjacency spectral
+gap} is
+\[
+ \delta(G)=\lambda_1(G)-\lambda_2(G)>0.
+\]
+Whenever a graph is fixed, we suppress $G$ in its eigenvalues. Throughout,
+$\mathbf{x}$ and $\mathbf{y}$ denote orthonormal real eigenvectors for
+$\lambda_1$ and $\lambda_2$, respectively, with $\mathbf{x}>0$. Their
+coordinates at a vertex $u$ are $x_u$ and $y_u$. Auxiliary vectors receive
+different letters. For any graph $H$, $\rho(H)=\lambda_1(H)$ denotes its
+spectral radius. Matrix norms are Euclidean operator norms, and vector
+norms without a subscript are Euclidean norms. The notation $M\preceq N$
+means that $N-M$ is positive semidefinite. All logarithms are natural.
+
+Let $\mathcal T_n$ and $\mathcal G_n$ be the sets of trees and connected
+graphs of order $n$, and put
+\[
+ \tau_n=\min_{T\in\mathcal T_n}\delta(T),\qquad
+ \eta_n=\min_{G\in\mathcal G_n}\delta(G).
+\]
+The minima exist because the sets of isomorphism classes are finite.
+Write $P_j$ for a path on $j$ vertices and $K_j$ for a complete graph on
+$j$ vertices. We use \emph{edge length} for every joining path:
+\begin{itemize}
+\item $\Comet(k,L)$ is the tree obtained from a path of $L\ge1$ edges by
+attaching $k\ge0$ new leaves to each endpoint. It is a symmetric double
+comet and has $2k+L+1$ vertices.
+\item For $k\ge1$, $\Kite(k,L)$ consists of two disjoint copies of $K_k$, with one
+selected vertex in each joined by a path of $L\ge1$ edges whose internal
+vertices are new. It is a symmetric double kite and has $2k+L-1$ vertices.
+\end{itemize}
+Thus $\Comet(k,L)$ is $C(k,L+1)$ in the notation of
+\citet{JKS2018}, whereas $\Kite(k,L)$ is $DK(k,L-1)$ in the notation of
+\citet{Stanic2013}.
+
+\subsection{Previous work}
+Stani\'c formulated the conjecture that some double kite attains $\eta_n$
+at every order \citep[Conjecture~2.1]{Stanic2013}. That paper verified the
+conjecture by exhaustive computation through order ten, reported
+counterexample searches through order fifteen, and derived equations for
+the first two eigenvalues of double kites, together with spectral-gap
+bounds and structural restrictions on possible minimizers. In particular,
+its double-kite calculations exhibit the role of the long joining path.
+
+Jovovi\'c, Koledin and Stani\'c proposed the corresponding conjecture that
+some symmetric double comet attains $\tau_n$
+\citep[Conjecture~2.1]{JKS2018}. They verified it through order twenty.
+They also proved that, for a fixed internal path, moving one terminal
+leaf from the larger end of a generalized double comet to the smaller
+end decreases its gap whenever the two leaf counts differ by at least
+two \citep[Theorem~2.3]{JKS2018}. Their further results include eigenvalue
+equations and structural conditions on extremal trees. The two
+conjectures are included in the survey of Liu and Ning
+\citep{LiuNing2023}.
+
+Several related extremal problems concern $\lambda_2$ itself.
+Kumar, Mohar, Pragada and Zhan determine the trees maximizing the second
+adjacency eigenvalue at prescribed order and diameter, and develop
+spectral-center decompositions for the associated extremal problems
+\citep{KMPZDiameter}. The same authors study the maximum of nonnegative
+convex combinations of the first two eigenvalues over trees of fixed
+order \citep{KMPZConvex}. Wang and Guo investigate
+extremal second eigenvalues in classes of graphs at prescribed order
+\citep{WangGuo2026}. These problems provide related structural settings;
+the objective here is the difference $\lambda_1-\lambda_2$, and all
+comparisons needed for that objective are established below.
+
+\subsection{Main results and proof strategy}
+Our first theorem identifies every minimizing tree at sufficiently large
+orders.
+\begin{theorem}\label{thm:trees}
+There is an integer $N_{\mathcal T}$ such that, for every $n\ge N_{\mathcal T}$,
+every $T\in\mathcal T_n$ with $\delta(T)=\tau_n$ is isomorphic to
+$\Comet(k,L)$ for some $2k+L+1=n$. Along every sequence of such minimizers,
+\[
+ k\sim\frac{n}{2\log n},\qquad
+ L=n-(1+o(1))\frac{n}{\log n}.
+\]
+\end{theorem}
+The second theorem gives the corresponding conclusion for connected graphs.
+\begin{theorem}\label{thm:graphs}
+There is an integer $N_{\mathcal G}$ such that, for every $n\ge N_{\mathcal G}$,
+every $G\in\mathcal G_n$ with $\delta(G)=\eta_n$ is isomorphic to
+$\Kite(k,L)$ for some $2k+L-1=n$. Along every sequence of such minimizers,
+\[
+ k\sim\frac{n}{2\log n},\qquad
+ L=n-(1+o(1))\frac{n}{\log n}.
+\]
+\end{theorem}
+Neither theorem asserts uniqueness of the minimizing integer $k$. The
+conclusions concern all sufficiently large orders; the conjectures at
+every order are not consequences of these statements. No explicit
+threshold is needed in the proofs.
+
+Both arguments begin by comparing a resistance lower bound with a
+symmetric comparison family. For trees, this determines the diameter and
+spectral scales. Two sign components of $\mathbf y$ then produce vertices
+whose degrees exhaust the branching budget to leading order. Deleting
+these vertices leaves a matrix of operator norm $o(\lambda_1)$. A two-dimensional
+Schur complement places the two integer degrees in a common interval of
+length $o(1)$, forcing equality. An exact path-resolvent estimate then
+shows that any remaining branch loses to a double comet of the same order.
+
+For general graphs we center $\mathbf y$ by subtracting a multiple of
+$\mathbf x$. The centered extrema and an exact path-resistance identity
+leave at most two vertices of slack in a neighborhood count. All large
+positive and negative coordinates form two dense terminal cores, with a
+bounded residual attachment set. A finite-rank resolvent estimate
+quantifies the spectral benefit of these attachments, while path
+transmission quantifies their effect on the gap. The comparison at fixed
+order removes every extra vertex, every unequal core order, and every
+multiple attachment. Finally, a uniform rooted-core comparison shows
+that any missing clique edge strictly increases the gap.
+
+We use the Perron--Frobenius theorem, the variational principle, eigenvalue
+interlacing and elementary symmetric-matrix inequalities in their standard
+forms; see \citet{BrouwerHaemers2012}. The path identities, resistance
+estimates, and Schur-complement comparisons specific to this problem are
+proved in full. Asymptotic statements are always made along an arbitrary
+sequence of minimizers whose orders tend to infinity. A contradiction to
+an arbitrary sequence of exceptions therefore establishes one threshold
+valid for every minimizer.
+
+\section{Resistance, path resolvents and two-vertex elimination}
+\label{sec:preliminaries}
+
+\subsection{The ground-state identity}
+Put $\pi_u=x_u^2$, so that $\sum_u\pi_u=1$. For a real function $f$ on
+$V(G)$, set $z_u=x_uf_u$. The Perron equations give
+\begin{equation}\label{pre:energy}
+ \mathbf z^T(\lambda_1I-A)\mathbf z
+ =\sum_{uv\in E(G)}x_ux_v(f_u-f_v)^2.
+\end{equation}
+Indeed, expanding the right-hand side and collecting the coefficient of
+$f_u^2$ gives $x_u\sum_{v\sim u}x_v=\lambda_1x_u^2$.
+The variational principle consequently yields
+\begin{equation}\label{pre:variational}
+ \delta(G)=\min_{\substack{f\ne0\\\sum_u\pi_uf_u=0}}
+ \frac{\sum_{uv\in E(G)}x_ux_v(f_u-f_v)^2}
+ {\sum_u\pi_uf_u^2}.
+\end{equation}
+For weighted mean-zero $f$, direct expansion also gives
+\begin{equation}\label{pre:variance}
+ \sum_u\pi_uf_u^2=\sum_{u<v}\pi_u\pi_v(f_u-f_v)^2,
+\end{equation}
+where any fixed ordering of the vertices can be used.
+
+\begin{lemma}\label{pre:diameter}
+If $G$ is connected, has order $n\ge3$ and diameter $D$, then
+\[
+ \delta(G)\ge\frac{2}{D(n-1)\lambda_1^{D-1}}.
+\]
+\end{lemma}
+\begin{proof}
+For each unordered pair $u,v$, choose a shortest path $Q_{uv}$ and put
+\[
+ R_{uv}=\sum_{ab\in E(Q_{uv})}\frac1{x_ax_b}.
+\]
+Cauchy--Schwarz on this path gives
+$(f_u-f_v)^2\le R_{uv}\mathcal E(f)$, where $\mathcal E(f)$ is the
+numerator in \eqref{pre:variational}. If $ab$ is oriented toward $v$ on
+an $h$-edge $u$--$v$ path, successive Perron equations imply
+$x_ux_v/(x_ax_b)\le\lambda_1^{h-1}$. Since $\lambda_1\ge1$,
+\[
+ \sum_{u<v}x_u^2x_v^2R_{uv}
+ \le D\lambda_1^{D-1}\sum_{u<v}x_ux_v
+ \le\frac{D(n-1)\lambda_1^{D-1}}2.
+\]
+The last inequality follows from $\norm{\mathbf x}_1^2\le n$.
+Now apply \eqref{pre:variance} and \eqref{pre:variational}.
+\end{proof}
+
+\subsection{Exact path identities}
+Define $\phi_j(z)=\det(zI-A(P_j))$ for $j\ge0$, with $\phi_0=1$ and
+$\phi_{-1}=0$. Expansion at a path endpoint gives
+$\phi_j=z\phi_{j-1}-\phi_{j-2}$. For $z>2$, write
+\[
+ r(z)=\frac{z-\sqrt{z^2-4}}2\in(0,1),\qquad z=r(z)+r(z)^{-1}.
+\]
+\begin{lemma}\label{pre:path}
+For $j\ge0$ and $z>2$,
+\[
+ \phi_j(z)=\frac{r(z)^{-j-1}-r(z)^{j+1}}{r(z)^{-1}-r(z)},
+ \qquad 0<\phi_j(z)\le z^j.
+\]
+For a path with $L\ge2$ edges, the endpoint diagonal entries and the opposite-corner entry
+of its internal resolvent $(zI-A(P_{L-1}))^{-1}$ are
+\begin{align}
+ s_L(z)&=\frac{\phi_{L-2}(z)}{\phi_{L-1}(z)}
+ =r(z)\frac{1-r(z)^{2L-2}}{1-r(z)^{2L}},\label{pre:s}\\
+ h_L(z)&=\frac1{\phi_{L-1}(z)}
+ =\frac{(1-r(z)^2)r(z)^{L-1}}{1-r(z)^{2L}}.\label{pre:h}
+\end{align}
+In particular, $s_L(z)-r(z)=-h_L(z)r(z)^L$.
+\end{lemma}
+\begin{proof}
+The formula for $\phi_j$ satisfies its recurrence and initial values.
+Its positivity also follows from $z>\rho(P_j)$; the upper bound follows
+inductively from the recurrence. Cofactor expansion gives the two stated
+resolvent entries. Substitution of the formula for $\phi_j$ proves
+\eqref{pre:s}--\eqref{pre:h} and their final identity.
+\end{proof}
+The expression in \eqref{pre:h} will also be denoted by $h_1(z)=1$ when
+$L=1$; in that case it represents a direct edge.
+
+\begin{lemma}[Centering and exact resistance]\label{pre:center}
+There exists $c\in\mathbb R$ such that $\mathbf w=\mathbf y-c\mathbf x$
+satisfies $\max_u w_u=M=-\min_u w_u>0$. It has the properties
+\begin{equation}\label{pre:centered}
+ \norm{\mathbf w}^2=1+c^2,\quad M^2\ge\frac1n,\quad
+ |c|/M\le\sqrt n,\quad (\lambda_2I-A)\mathbf w=c\delta\mathbf x.
+\end{equation}
+If $w_u>0>w_v$ and $h=\dist(u,v)$, then
+\begin{equation}\label{pre:exact-resistance}
+ \delta(G)\ge\frac{4w_u|w_v|}{\phi_{h-1}(\lambda_1)}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The continuous function
+$c\mapsto\max_u(y_u-cx_u)+\min_u(y_u-cx_u)$ is strictly decreasing
+and tends to opposite infinities at the two ends of the real line. Its
+zero gives the asserted centering. Here $M>0$, since otherwise
+$\mathbf y$ would be a multiple of $\mathbf x$. Orthogonality gives
+$\norm{\mathbf w}^2=1+c^2$ and $\mathbf x^T\mathbf w=-c$.
+Thus $nM^2\ge1$ and $|c|\le M\norm{\mathbf x}_1\le M\sqrt n$.
+The last equation in \eqref{pre:centered} is obtained by applying
+$\lambda_2I-A$.
+
+Choose a shortest path $u=v_0,\ldots,v_h=v$. Set $a_0=x_u$, $a_h=x_v$
+and solve $\lambda_1a_i=a_{i-1}+a_{i+1}$ in its interior. The inverse
+of $\lambda_1I-A(P_{h-1})$ is nonnegative: the internal path is a proper
+principal subgraph of the connected graph, so its spectral radius is
+strictly below $\lambda_1$. The Perron equations, with all contributions
+off the path retained as nonnegative forcing, imply $x_{v_i}\ge a_i>0$.
+Put $b_0=0$ and $b_i=\phi_{i-1}(\lambda_1)$ for $i\ge1$.
+The shared recurrence implies
+\[
+ a_ib_{i+1}-a_{i+1}b_i=x_u\qquad(0\le i<h).
+\]
+Divide by $a_ia_{i+1}$ and telescope to obtain
+\begin{equation}\label{pre:exact-path-resistance}
+ \sum_{i=0}^{h-1}\frac1{x_{v_i}x_{v_{i+1}}}
+ \le\sum_{i=0}^{h-1}\frac1{a_ia_{i+1}}
+ =\frac{\phi_{h-1}(\lambda_1)}{x_ux_v}.
+\end{equation}
+This argument includes $h=1$, with no interior equations.
+By \eqref{pre:energy} applied to $\mathbf y$,
+\[
+ \delta=\sum_{ab\in E(G)}x_ax_b
+ \left(\frac{y_a}{x_a}-\frac{y_b}{x_b}\right)^2
+ =\sum_{ab\in E(G)}x_ax_b
+ \left(\frac{w_a}{x_a}-\frac{w_b}{x_b}\right)^2.
+\]
+Cauchy--Schwarz along the path and
+\eqref{pre:exact-path-resistance} give
+\[
+ \delta\ge
+ \frac{(w_ux_v+|w_v|x_u)^2}{x_ux_v\phi_{h-1}(\lambda_1)}
+ \ge\frac{4w_u|w_v|}{\phi_{h-1}(\lambda_1)}.
+\]
+\end{proof}
+
+\subsection{A two-dimensional Schur-complement estimate}
+We record the elementary matrix argument used in both proofs.
+\begin{lemma}\label{pre:schur}
+Let $A$ be the adjacency matrix of a connected graph of order at least
+three. Partition its
+vertices into two selected vertices and the remaining vertices, so that
+\[
+ A=\begin{pmatrix}D&W^T\\ W&B\end{pmatrix},\qquad
+ F(z)=zI_2-D-W^T(zI-B)^{-1}W.
+\]
+Suppose $\lambda_2>\rho(B)$ and
+$I_2\preceq F'(z)\preceq aI_2$ for $\lambda_2\le z\le\lambda_1$.
+Writing $F_{12}(z)=-g(z)$, one has
+\[
+ 0\le F_{ii}(\lambda_1)\le a\delta,
+ \qquad \delta\ge\frac{2g(\lambda_1)}a.
+\]
+\end{lemma}
+\begin{proof}
+Interlacing gives $\lambda_3\le\rho(B)<\lambda_2$, so $\lambda_2$
+is simple. Block elimination is a congruence between $zI-A$ and
+$\operatorname{diag}(F(z),zI-B)$. Thus the two eigenvalues of
+$F(\lambda_2)$ are negative and zero, while those of $F(\lambda_1)$
+are zero and positive. Integrating the upper derivative bound and using
+the variational principle gives
+$\lambda_{\max}(F(\lambda_1))\le a\delta$.
+The matrix $F(\lambda_1)$ is positive semidefinite and singular.
+Its diagonal entries are therefore nonnegative and at most $a\delta$;
+their product is $g(\lambda_1)^2$, so its trace is at least
+$2g(\lambda_1)$. Here $g(z)>0$: a direct edge or a walk through the
+remaining vertices connects the two selected vertices, and the resolvent
+has a nonnegative walk expansion. The trace bound proves the result.
+Finally, differentiation gives
+$F'(z)=I_2+W^T(zI-B)^{-2}W$, explaining the lower derivative bound.
+\end{proof}
+
+\section{Two comparison families}\label{sec:benchmarks}
+
+\begin{lemma}[Double comets]\label{bench:comet}
+If $k\ge3$, $L\ge1$, and $r=(k-1)^{-1/2}$, then
+\begin{equation}\label{bench:comet-bound}
+ \delta(\Comet(k,L))\le
+ \frac{2(1-r^2)r^{L-1}}{1-r^{2L}}
+ \le2(k-1)^{-(L-1)/2}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $\alpha=r+r^{-1}=k/\sqrt{k-1}$. Number the joining path
+$0,\ldots,L$. Give a vector $\mathbf u$ the value $r^j$ at vertex $j$
+and the value of its adjacent endpoint divided by $\alpha$ at each leaf.
+Let $\mathbf v$ be its reflection. Substituting into the adjacency
+equations gives
+\[
+ (A-\alpha I)\mathbf u=e\mathbf e_L,\quad
+ (A-\alpha I)\mathbf v=e\mathbf e_0,\quad
+ e=(1-r^2)r^{L-1}.
+\]
+The positive vector $\mathbf u+\mathbf v$ implies
+$\lambda_1\le\alpha+e/(1+r^L)$. The Perron vector is invariant under
+reflection, so $\mathbf u-\mathbf v$ is orthogonal to it. Since
+\[
+ \norm{\mathbf u-\mathbf v}^2\ge2(1-r^L)^2,\qquad
+ (\mathbf u-\mathbf v)^T(A-\alpha I)(\mathbf u-\mathbf v)
+ =-2e(1-r^L),
+\]
+the variational principle gives $\lambda_2\ge\alpha-e/(1-r^L)$.
+Subtracting proves the first bound. The second uses
+$1-r^{2L}\ge1-r^2$.
+\end{proof}
+
+For $k\ge3$ define
+\begin{equation}\label{bench:clique-parameters}
+ \beta_k=\frac{k-2+\sqrt{k^2-4}}2,\qquad
+ \kappa_k=\beta_k+\beta_k^{-1}.
+\end{equation}
+\begin{lemma}[Double kites]\label{bench:kite}
+For $k\ge3$ and $L\ge1$,
+\begin{equation}\label{bench:kite-bound}
+ \delta(\Kite(k,L))\le\frac{32}{k+3}\beta_k^{-(L-1)},
+ \qquad \kappa_k-(k-1)>\frac1{k(k-1)}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+In the unit Perron vector of $\Kite(k,L)$, let $a$ be the common
+coordinate at the two clique roots. Its maximum degree is $k$, so
+$\lambda_1\le k$. Each nonroot clique coordinate equals
+$a/(\lambda_1-k+2)\ge a/2$; consequently $a^2\le2/(k+3)$.
+
+For completeness, $\beta_k$ satisfies
+$\beta_k^2-(k-2)\beta_k-(k-2)=0$. At $z=\kappa_k$ this gives
+\[
+ z-\frac{k-1}{z-k+2}=\beta_k^{-1}.
+\]
+Use the path values $r^j$, where $r=\beta_k^{-1}$, and use at each
+nonroot clique vertex its root value divided by $\kappa_k-k+2$.
+The residual of $A-\kappa_kI$ is positive only at the far root.
+Adding its reflection gives a positive vector with a nonzero nonnegative
+residual. Multiplication by the Perron vector proves
+$\lambda_1>\kappa_k>2$. Hence $r_1=r(\lambda_1)<\beta_k^{-1}$.
+The exact Perron coordinates along the joining path are
+\[
+ x_j=a\frac{r_1^j+r_1^{L-j}}{1+r_1^L}
+ \qquad(0\le j\le L).
+\]
+Apply \eqref{pre:variational} to a function taking values $+1$ and $-1$
+on the two reflected halves. If $L$ is odd, only the central edge
+contributes and its energy is at most $16a^2r_1^{L-1}$; the weighted
+norm is one. If $L$ is even, give the central vertex value zero.
+The energy of the two central edges is at most $8a^2r_1^{L-1}$.
+Both neighboring Perron coordinates exceed the central coordinate,
+because $\lambda_1>2$; thus the squared weighted norm is at least $2/3$.
+In either case the weighted mean is zero by reflection. These estimates,
+$a^2\le2/(k+3)$, and $r_1<\beta_k^{-1}$ prove the gap bound.
+
+Finally set $\varepsilon=k-1-\beta_k$. Direct substitution gives
+$\varepsilon^2-k\varepsilon+1=0$, so $\varepsilon>1/k$.
+The same identity gives
+$\kappa_k-(k-1)=\varepsilon/\beta_k>1/[k(k-1)]$.
+\end{proof}
+
+\section{The spectral scale and concentration of branching in trees}
+\label{tree:scale-section}
+
+Consider an arbitrary sequence of trees attaining $\tau_n$, with their
+orders tending to infinity. In this and the following two sections, every
+asymptotic statement is along this sequence. We suppress the argument $T$
+in its eigenvalues, write $\delta=\tau_n$, and set
+\[
+ D=\operatorname{diam}(T),\qquad m=n-D-1,\qquad
+ a_n=\log n-\log\log n-\log 2.
+\]
+Thus $m$ is the number of vertices outside any diametral path. The
+arbitrariness of the sequence will give a uniform eventual conclusion.
+
+\begin{lemma}\label{tree:scales}
+Along every such sequence,
+\begin{align}
+ -\log\delta&=\frac n2(a_n-1)+o(n),\label{tree:gap-scale}\\
+ m&\sim\frac{n}{\log n},\label{tree:m-scale}\\
+ \log\lambda_1&=\frac12a_n+o(1),\qquad
+ \lambda_1^2\sim\lambda_2^2\sim\frac m2.\label{tree:eigen-scale}
+\end{align}
+In particular, $n^C\delta\longrightarrow0$ for every fixed $C>0$.
+\end{lemma}
+
+\begin{proof}
+Choose $k=\lfloor n/(2\log n)\rfloor$ and $L=n-2k-1$.
+The tree $\Comet(k,L)$ has order $n$, and Lemma~\ref{bench:comet}
+therefore gives
+\begin{equation}\label{tree:benchmark}
+ -\log\delta\geq
+ \left(\frac n2-k-1\right)\log(k-1)-\log2
+ =\frac n2(a_n-1)+o(n).
+\end{equation}
+Indeed, $\log(k-1)=a_n+O(\log n/n)$ and
+$k\log(k-1)=n/2+o(n)$. This already proves the last assertion.
+
+Fix a diametral path $P$. Regard its adjacency matrix as indexed by
+$V(T)$, with zero rows at vertices outside the path, and write
+$A(T)=A(P)+A(F)$, where $F$ consists of the edges outside $P$.
+The forest $F$ has exactly $m$ edges. Spectral symmetry of a bipartite
+graph and $\operatorname{tr}A(F)^2=2m$ show that
+\[
+ \sum_{\lambda_j(F)>0}\lambda_j(F)^2=m,
+ \qquad \lambda_2(F)\leq\sqrt{m/2}.
+\]
+For the second assertion, there is nothing to prove if
+$\lambda_2(F)\leq0$; otherwise the two largest positive squared
+eigenvalues are each at least $\lambda_2(F)^2$. Weyl's inequality now
+gives
+\[
+ \lambda_2\leq\lambda_2(F)+\lambda_1(P)<\sqrt{m/2}+2.
+\]
+As $\delta<1$ eventually, we also have
+$\lambda_1<\sqrt{m/2}+3$. Lemma~\ref{pre:diameter} consequently implies
+\begin{equation}\label{tree:rough-upper}
+ -\log\delta\leq
+ (n-m-2)\log\bigl(3+\sqrt{m/2}\bigr)+O(\log n).
+\end{equation}
+
+First, $m\to\infty$: if $m$ were bounded on a subsequence, the
+right-hand side would be $O(n)$, contradicting
+\eqref{tree:benchmark}. Next, $m/n\to0$. Otherwise, on a subsequence
+with $m\geq\varepsilon n$ for some $\varepsilon>0$, the coefficient of
+$n\log n$ in \eqref{tree:rough-upper} would be at most
+$(1-\varepsilon)/2$, again contradicting the benchmark. Since
+\[
+ \log\bigl(3+\sqrt{m/2}\bigr)
+ =\frac12\log(m/2)+O(m^{-1/2}),
+\]
+equation~\eqref{tree:rough-upper} becomes
+\[
+ -\log\delta\leq\frac{n-m}{2}\log(m/2)+o(n).
+\]
+Here the discarded error is $O(n/\sqrt m+\log n)=o(n)$.
+
+Put $c=m\log n/n$. Comparison with \eqref{tree:benchmark} yields
+\begin{equation}\label{tree:c-stability}
+ 0\leq\log c-c+1+\frac mn\log\frac{2n}{m}+o(1).
+\end{equation}
+To see this directly, use $\log(m/2)=a_n+\log c$ and
+$(m/n)\log(m/2)=c-(m/n)\log(2n/m)$. The penultimate term in
+\eqref{tree:c-stability} tends to zero. The function
+$\log c-c+1$ is nonpositive, vanishes only at $c=1$, and tends to
+$-\infty$ as $c\to0$ or $c\to\infty$. Thus $c\to1$, proving
+\eqref{tree:m-scale}.
+
+Apply Lemma~\ref{pre:diameter} once more, now retaining $\lambda_1$:
+\[
+ \log\lambda_1\geq
+ \frac{\frac n2(a_n-1)+o(n)}{n-m-2}
+ =\frac12a_n+o(1).
+\]
+The last equality follows from
+$(a_n-1)m/n\to1$ and $a_n(m/n)^2\to0$.
+Conversely, $\lambda_1<\sqrt{m/2}+3$ and
+\eqref{tree:m-scale} give $\log\lambda_1\leq a_n/2+o(1)$.
+It follows that $\lambda_1^2\sim m/2$. The same holds for
+$\lambda_2^2$, since $\lambda_1-\lambda_2=\delta$ is smaller than
+every fixed inverse power of $n$. Finally,
+\[
+ -\log\delta\leq(n-m-2)\log\lambda_1+O(\log n)
+ =\frac n2(a_n-1)+o(n),
+\]
+where we used $ma_n=n(1+o(1))$. This completes the proof.
+\end{proof}
+
+\begin{lemma}\label{tree:mass}
+Let $H$ be a nontrivial tree with $\lambda_1(H)>2$, and let
+$\mathbf z>0$ be a Perron eigenvector of $H$. If $H$ has $a$ leaves,
+then
+\[
+ \bigl(\lambda_1(H)-2\bigr)\sum_{v\in V(H)}z_v
+ \leq(a-2)\max_{v\in V(H)}z_v.
+\]
+\end{lemma}
+
+\begin{proof}
+Sum the eigenvalue equations and subtract twice the sum of the
+coordinates. The resulting identity is
+\[
+ \bigl(\lambda_1(H)-2\bigr)\sum_vz_v
+ =\sum_v(d_H(v)-2)z_v.
+\]
+Discard the negative terms, and use
+$\sum_v(d_H(v)-2)_+=a-2$.
+\end{proof}
+
+\begin{lemma}\label{tree:hubs}
+There are distinct vertices $u_1,u_2$ of degrees $d_1,d_2$ such that
+\begin{equation}\label{tree:hub-scales}
+ d_1\sim d_2\sim m/2.
+\end{equation}
+Moreover, if $B=A(T-\{u_1,u_2\})$, then
+\begin{equation}\label{tree:residual-small}
+ \lVert B\rVert=o(\sqrt m)=o(\lambda_2).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The unit eigenvector $\mathbf y$ corresponding to $\lambda_2$ has
+both signs, because it is orthogonal to the positive unit eigenvector
+$\mathbf x$ corresponding to $\lambda_1$. Choose a connected
+component $H_1$ of the subgraph induced by $\{v:y_v>0\}$ and a
+connected component $H_2$ of the subgraph induced by $\{v:y_v<0\}$.
+At a vertex of $H_1$, the omitted neighbors have nonpositive
+coordinates, so
+\[
+ A(H_1)\mathbf y_{H_1}\geq\lambda_2\mathbf y_{H_1}.
+\]
+The analogous inequality holds for $-\mathbf y_{H_2}>0$.
+Multiplying by positive Perron eigenvectors of the respective
+components, and applying interlacing for the upper bound, gives
+\begin{equation}\label{tree:nodal-radii}
+ \lambda_2\leq\lambda_1(H_i)\leq\lambda_1
+ \qquad(i=1,2).
+\end{equation}
+In particular, the components are nontrivial and have spectral radius
+greater than two eventually.
+
+The endpoints of a diametral path are leaves, and no internal vertex
+of that path is a leaf. Thus $T$ has at most $m+2$ leaves. Every
+nontrivial connected subtree $H$ has at most this many leaves, since
+\[
+ \#\{\text{leaves of }H\}-2
+ =\sum_{v\in V(H)}(d_H(v)-2)_+
+ \leq\sum_{v\in V(T)}(d_T(v)-2)_+\leq m.
+\]
+Let $\mathbf z>0$ be a Perron eigenvector of $H_i$, and choose
+$u_i$ at a maximum coordinate $M$. By Lemma~\ref{tree:mass},
+\[
+ \frac{\sum_v z_v}{M}
+ \leq\frac{m}{\lambda_1(H_i)-2}=O(\sqrt m).
+\]
+There is exactly one walk of length two from $u_i$ to each vertex
+at distance two in a tree, and there are $d_{H_i}(u_i)$ such walks
+back to $u_i$. Consequently,
+\[
+ \lambda_1(H_i)^2M
+ =d_{H_i}(u_i)M+
+   \sum_{\operatorname{dist}_{H_i}(u_i,v)=2}z_v.
+\]
+Together with \eqref{tree:nodal-radii}, this implies
+\[
+ d_i=d_T(u_i)\geq\lambda_2^2-O(\sqrt m)=m/2-o(m).
+\]
+The vertices $u_1,u_2$ are distinct. Their contributions to the
+positive degree excess are $d_1-2$ and $d_2-2$ eventually, while the
+total excess is at most $m$. Hence both degrees are asymptotic to
+$m/2$, and the total positive degree excess at all remaining vertices
+is $o(m)$. Their degrees are therefore uniformly $o(m)$.
+
+For completeness, a forest of maximum degree $\Delta\geq1$ has
+operator norm at most $2\sqrt\Delta$. Orient each component away
+from a root. For an edge with parent $a$ and child $b$, use
+\[
+ 2|z_a z_b|\leq\Delta^{-1/2}z_a^2+\Delta^{1/2}z_b^2.
+\]
+Each vertex is a parent at most $\Delta$ times and a child at most
+once, so summation bounds the absolute adjacency quadratic form by
+$2\sqrt\Delta\lVert\mathbf z\rVert^2$. An edgeless forest has norm
+zero. Apply this estimate to $T-\{u_1,u_2\}$, whose maximum degree
+is $o(m)$, to obtain \eqref{tree:residual-small}.
+\end{proof}
+
+\section{Equal degrees at the two dominant vertices}
+\label{tree:degree-section}
+
+Retain $u_1,u_2$ and $B$ from Lemma~\ref{tree:hubs}. Let
+$\mathbf a_i$ be the indicator vector of the neighbors of $u_i$
+in $T-\{u_1,u_2\}$, let $W=[\mathbf a_1\ \mathbf a_2]$, and let
+$A_U=A(T[\{u_1,u_2\}])$. For $z>\lVert B\rVert$, define
+\begin{equation}\label{tree:schur-definition}
+ S(z)=W^{\mathsf T}(zI-B)^{-1}W,
+ \qquad F(z)=zI_2-A_U-S(z).
+\end{equation}
+We write $F_{12}(z)=-g(z)$; explicitly,
+\[
+ g(z)=\mathbf1_{\{u_1u_2\in E(T)\}}
+      +\mathbf a_1^{\mathsf T}(zI-B)^{-1}\mathbf a_2>0.
+\]
+The strict inequality follows from the unique path between the two
+vertices and the nonnegative Neumann expansion of the resolvent.
+
+\begin{lemma}\label{tree:schur-bounds}
+Eventually, throughout $\lambda_2\leq z\leq\lambda_1$,
+\[
+ I_2\preceq F'(z)\preceq4I_2.
+\]
+Consequently,
+\begin{equation}\label{tree:schur-consequences}
+ \delta\geq\frac12g(\lambda_1),\qquad
+ 0\leq F_{ii}(\lambda_1)\leq4\delta\quad(i=1,2).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By \eqref{tree:residual-small}, $\lambda_2>\lVert B\rVert$
+eventually. Interlacing gives $\lambda_3\leq\lambda_1(B)<\lambda_2$,
+where $\lambda_1(B)$ denotes the largest eigenvalue of the matrix
+$B$. Thus the two-root Schur complement in Lemma~\ref{pre:schur}
+applies. Direct differentiation gives
+\[
+ F'(z)=I_2+W^{\mathsf T}(zI-B)^{-2}W.
+\]
+The second term is positive semidefinite, and its norm is at most
+\[
+ \frac{\lVert W\rVert^2}{(z-\lVert B\rVert)^2}
+ \leq\frac{d_1+d_2}{(\lambda_2-\lVert B\rVert)^2}
+ =2+o(1).
+\]
+The upper bound $4I_2$ follows eventually. Apply
+Lemma~\ref{pre:schur} with derivative bound four to obtain
+\eqref{tree:schur-consequences}.
+\end{proof}
+
+\begin{lemma}\label{tree:budget}
+Let $L=\operatorname{dist}_T(u_1,u_2)$. Then
+\begin{equation}\label{tree:separation}
+ L\geq n-(1+o(1))\frac{n}{\log n}.
+\end{equation}
+In particular, $L\geq3$ eventually. The integer
+\begin{equation}\label{tree:b-definition}
+ b=n-(L+1)-(d_1-1)-(d_2-1)
+\end{equation}
+is nonnegative and satisfies $b=o(m)$.
+\end{lemma}
+
+\begin{proof}
+For $L\geq2$, the unique connecting path contributes the term
+$z^{-(L-1)}$ to the Neumann expansion of $g(z)$. For $L=1$ the
+direct edge gives $g(z)\geq1$, so in all cases
+$g(\lambda_1)\geq\lambda_1^{-(L-1)}$. By
+\eqref{tree:schur-consequences},
+\[
+ (L-1)\log\lambda_1\geq-\log\delta-\log2.
+\]
+Equations~\eqref{tree:benchmark} and \eqref{tree:eigen-scale} give
+\[
+ L-1\geq n\frac{a_n-1+o(1)}{a_n+o(1)}
+ =n-(1+o(1))\frac{n}{\log n}.
+\]
+The additive $o(1)$ precision in $\log\lambda_1$ is used here.
+
+The path has $L+1$ vertices. At its endpoints there are $d_1-1$
+and $d_2-1$ neighbors outside the path. These neighbors are all
+distinct, by acyclicity, so $b\geq0$. Finally,
+\eqref{tree:m-scale}, \eqref{tree:hub-scales}, and
+\eqref{tree:separation} yield
+\[
+ 0\leq b=n-L+1-d_1-d_2=o(n/\log n)=o(m).
+\]
+\end{proof}
+
+\begin{lemma}\label{tree:diagonal}
+For $L\geq3$ and $z>\lVert B\rVert$,
+\begin{equation}\label{tree:diagonal-estimate}
+ S_{ii}(z)=\frac{d_i}{z}+E_i(z),\qquad
+ 0\leq E_i(z)\leq\frac{b+1}{z(z^2-\lVert B\rVert^2)}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since the hubs are not adjacent, $\lVert\mathbf a_i\rVert^2=d_i$.
+Each entry of $B\mathbf a_i$ is zero or one: two neighbors in the
+support of $\mathbf a_i$ would create a cycle of length four through
+$u_i$. Its nonzero entries therefore count vertices at distance two
+from $u_i$ reached without passing through the other hub.
+Exactly one such vertex lies on the connecting path. Any other such
+vertex lies outside that path and cannot be an immediate off-path
+neighbor of either hub. For its own hub this would create a triangle;
+for the other hub it would create a second path between the hubs and
+hence a cycle. Thus every such vertex is among the $b$ vertices
+counted by \eqref{tree:b-definition}, and
+\begin{equation}\label{tree:second-neighborhood}
+ \lVert B\mathbf a_i\rVert^2\leq b+1.
+\end{equation}
+
+All neighbors of $u_i$ lie in the same bipartition class of $T$.
+Consequently $\mathbf a_i^{\mathsf T}B^{2j+1}\mathbf a_i=0$ for
+every $j\geq0$. Expanding the resolvent gives
+\[
+ S_{ii}(z)=\frac{d_i}{z}
+ +\sum_{j\geq1}\frac{\lVert B^j\mathbf a_i\rVert^2}{z^{2j+1}}.
+\]
+For $j\geq1$, the numerator is at most
+$\lVert B\rVert^{2j-2}\lVert B\mathbf a_i\rVert^2$.
+Summing the resulting geometric series proves the claim.
+\end{proof}
+
+\begin{lemma}\label{tree:equal-degrees}
+Eventually $d_1=d_2=k+1$ for an integer $k$, and
+\begin{equation}\label{tree:k-scale}
+ k\sim\frac{n}{2\log n},\qquad b=o(k),\qquad
+ n=2k+L+1+b.
+\end{equation}
+Moreover,
+\begin{equation}\label{tree:radius-upper}
+ \lambda_1^2\leq k+1+\frac{3(b+1)}{k}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+From the definitions, there is the exact identity
+\[
+ \lambda_1^2-d_i
+ =\lambda_1E_i(\lambda_1)+\lambda_1F_{ii}(\lambda_1).
+\]
+Use \eqref{tree:diagonal-estimate} and
+\eqref{tree:schur-consequences} to obtain
+\begin{equation}\label{tree:integer-interval}
+ d_i\leq\lambda_1^2\leq
+ d_i+\frac{b+1}{\lambda_1^2-\lVert B\rVert^2}
+       +4\lambda_1\delta.
+\end{equation}
+The error on the right tends to zero: $b=o(m)$,
+$\lambda_1^2-\lVert B\rVert^2\sim m/2$, and
+$\lambda_1\delta\to0$. The integers $d_1,d_2$ therefore lie in the
+same interval of length $o(1)$ and must be equal eventually.
+Their common value and the definition of $b$ give
+\eqref{tree:k-scale}.
+
+For large $n$,
+$\lambda_1^2-\lVert B\rVert^2\geq k/2$.
+Also $4\lambda_1\delta\leq(b+1)/k$, because $b+1\geq1$,
+$k\lambda_1$ grows at most polynomially in $n$, and $\delta$ is
+smaller than every fixed inverse power of $n$. Substitution in
+\eqref{tree:integer-interval} proves \eqref{tree:radius-upper}.
+\end{proof}
+
+\section{Exact completion of the tree structure}
+\label{tree:completion-section}
+
+\begin{lemma}\label{tree:path-comparison}
+Write $\lambda_1=r+r^{-1}$ with $0<r<1$, and put $t=r^{-2}$.
+Along the minimizing sequence, eventually
+\begin{equation}\label{tree:path-comparison-bound}
+ \delta\geq\frac14t^{-(L-1)/2},\qquad
+ t\leq k-1+\frac{3(b+1)}k.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The representation of $\lambda_1$ is valid eventually because
+$\lambda_1\to\infty$. Retain in the residual resolvent only those
+walks confined to the interior of the path between $u_1$ and $u_2$.
+All terms are nonnegative, so Lemma~\ref{pre:path} gives
+\[
+ g(\lambda_1)\geq
+ \bigl((\lambda_1I-A(P_{L-1}))^{-1}\bigr)_{1,L-1}
+ =\frac1{\phi_{L-1}(\lambda_1)}
+ =\frac{(1-r^2)r^{L-1}}{1-r^{2L}}.
+\]
+Since $r\to0$, the last expression is at least
+$r^{L-1}/2$ eventually. The first assertion now follows from
+$\delta\geq g(\lambda_1)/2$.
+For the second, use
+$\lambda_1^2=t+2+t^{-1}$ and \eqref{tree:radius-upper}, discarding
+the positive term $t^{-1}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:trees}]
+Suppose that there are minimizers which are not symmetric double
+comets at arbitrarily large orders. Choose a sequence of these
+minimizers and apply the preceding lemmas. The symmetric double
+comet
+\[
+ C=\Comet(k,L+b)
+\]
+has the same order $n=2k+L+1+b$. By Lemmas~\ref{bench:comet} and
+\ref{tree:path-comparison},
+\begin{equation}\label{tree:gap-ratio}
+ \frac{\delta(T)}{\delta(C)}
+ \geq\frac18(k-1)^{b/2}
+ \left(1+\frac{3(b+1)}{k(k-1)}\right)^{-(L-1)/2}.
+\end{equation}
+Taking logarithms and using $\log(1+s)\leq s$ for $s\geq0$ yields
+\begin{equation}\label{tree:log-ratio}
+ \log\frac{\delta(T)}{\delta(C)}
+ \geq\frac b2\log(k-1)
+       -\frac{3(L-1)(b+1)}{2k(k-1)}-\log8.
+\end{equation}
+By \eqref{tree:k-scale}, $L\leq n=O(k\log k)$.
+If $b\geq1$, then $b+1\leq2b$, and the right-hand side is bounded
+below by
+\[
+ b\left(\frac12\log(k-1)-O\left(\frac{\log k}{k}\right)\right)
+ -\log8.
+\]
+This tends to $+\infty$ uniformly over integers $b\geq1$,
+contradicting the minimality of $T$.
+
+It follows that $b=0$ eventually. Every vertex then lies on the
+connecting path or is an immediate off-path neighbor of one of its
+endpoints. Acyclicity forces each such off-path neighbor to be a
+leaf: the path together with its incident edges to these neighbors
+already forms a spanning tree. The equality $d_1=d_2=k+1$ gives
+exactly $k$ leaves at each endpoint. Hence $T=\Comet(k,L)$,
+contradicting our choice of the sequence. This proves the existence
+of a uniform eventual threshold. Finally,
+$k\sim n/(2\log n)$ and $L=n-2k-1$ give the stated parameter
+asymptotics.
+\end{proof}
+
+\section{The global scale and vertex budget for graphs}
+\label{sec:graph-scale}
+
+We now consider an arbitrary sequence $G\in\mathcal G_n$ with
+$\delta(G)=\eta_n$ and $n\to\infty$. Use the centered vector
+$\mathbf w=\mathbf y-c\mathbf x$ of Lemma~\ref{pre:center}, and choose
+vertices $a,b$ with $w_a=M=-w_b$. Write $d=\dist(a,b)$ and
+\begin{equation}\label{graph:k0}
+ k_0=\left\lceil\lambda_2-\sqrt n\,\delta\right\rceil.
+\end{equation}
+The following counting bound is valid before imposing minimality,
+whenever $k_0\ge1$.
+
+\begin{lemma}\label{graph:neighborhoods}
+One has $d\le n-2k_0+1$. If also $\lambda_1>2$, then
+\begin{equation}\label{graph:universal}
+ \delta\ge\frac4n\lambda_1^{-n+2\lambda_1-2(1+\sqrt n)\delta}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+At the positive extremum, \eqref{pre:centered} gives
+\[
+ \lambda_2M=\sum_{v\sim a}w_v+c\delta x_a
+ \le M|N(a)\cap\{w>0\}|+|c|\delta x_a.
+\]
+Since $x_a\le1$ and $|c|/M\le\sqrt n$, at least $k_0$ neighbors of
+$a$ have positive centered coordinates. The negative extremum has at
+least $k_0$ negative neighbors. These two sets are disjoint and each
+meets a shortest $a$--$b$ path in at most one vertex. Their union with
+that path has at least $d+1+2k_0-2$ vertices. This proves the distance
+bound and, by \eqref{graph:k0},
+\[
+ d-1\le n-2\lambda_1+2(1+\sqrt n)\delta.
+\]
+Lemma~\ref{pre:center} at $a,b$ gives
+$\delta\ge4M^2/\phi_{d-1}(\lambda_1)$. Now use $M^2\ge1/n$ and
+$\phi_{d-1}(\lambda_1)\le\lambda_1^{d-1}$.
+\end{proof}
+
+\begin{lemma}\label{graph:scale}
+Let $z_n>1$ be the solution of $z_n(1+\log z_n)=n/2$, defined for
+all sufficiently large $n$. Then
+\begin{align}
+ -\log\eta_n&=(n-2z_n)\log z_n+O(\log n),\label{graph:rate}\\
+ \lambda_1&=z_n+O\!\left(\sqrt{n/\log n}\right),
+ \qquad k_0\sim\frac{n}{2\log n}.\label{graph:scale-eq}
+\end{align}
+In particular, $\delta$ is smaller than every fixed inverse power of $n$
+eventually.
+\end{lemma}
+\begin{proof}
+The function $f_n(z)=(n-2z)\log z$, $z\ge1$, has a unique maximum at
+$z_n$. Take an integer $h$ nearest to $z_n+2$, and compare with
+$\Kite(h,n-2h+1)$. Since $\beta_h>h-2$, Lemma~\ref{bench:kite} gives
+\[
+ -\log\eta_n\ge(n-2h)\log(h-2)-O(\log n)
+ \ge f_n(z_n)-O(\log n).
+\]
+To justify the second estimate, put $u=h-2=z_n+O(1)$.
+The expression on the left is $f_n(u)-4\log u$; Taylor's theorem at
+$z_n$ gives $f_n(u)=f_n(z_n)+O((\log n)^2/n)$.
+This lower bound proves the asserted rapid decay of $\delta$.
+
+Also $\lambda_1\to\infty$. Otherwise, along a subsequence on which it
+is bounded, Lemma~\ref{pre:diameter}, with $D\le n-1$, would give
+$-\log\delta=O(n+\log n)$, a contradiction. Thus $\lambda_1>2$ and
+$k_0\ge1$ eventually. Applying \eqref{graph:universal}, and using
+$\lambda_1\le n-1$ and the rapid decay of $\delta$, gives
+\[
+ -\log\eta_n\le f_n(\lambda_1)+O(\log n)
+ \le f_n(z_n)+O(\log n).
+\]
+This proves \eqref{graph:rate}. If $t=\lambda_1/z_n$, direct algebra gives
+\[
+ f_n(z_n)-f_n(tz_n)
+ =2z_n\bigl[\log z_n(t-1-\log t)+(t-1)\log t\bigr].
+\]
+The two bracketed terms are nonnegative. Since their sum multiplied by
+$2z_n$ is $O(\log n)$, first $t\to1$, and then
+$(t-1)^2=O(\log n/n)$. Because $z_n\sim n/(2\log n)$, the claimed
+bound on $\lambda_1$ follows. The definition of $k_0$ changes
+$\lambda_1$ by only $O(1)$, proving its scale.
+\end{proof}
+
+\begin{lemma}[A constant vertex budget]\label{graph:slack}
+Eventually the nonnegative integer
+\[
+ b_0=n-d-2k_0+1
+\]
+belongs to $\{0,1,2\}$.
+\end{lemma}
+\begin{proof}
+Nonnegativity follows from Lemma~\ref{graph:neighborhoods}. Put
+$h=k_0+1$, $B_0=\beta_h$, and $m=d-1=n-2k_0-b_0$.
+The definition of $k_0$ and \eqref{bench:kite-bound} give
+\[
+ \lambda_1\le k_0+(1+\sqrt n)\delta<\kappa_h
+\]
+eventually; the separation of $\kappa_h$ from $k_0$ is at least
+$1/[k_0(k_0+1)]$, whereas the error is superpolynomially small.
+For $\gamma=(\lambda_1+\sqrt{\lambda_1^2-4})/2$, eventually
+$2\le\gamma<B_0$. Lemma~\ref{pre:path} implies
+\[
+ \phi_m(\lambda_1)
+ =\frac{\gamma^{m+1}-\gamma^{-m-1}}{\gamma-\gamma^{-1}}
+ \le\frac43 B_0^m.
+\]
+The exact resistance bound at the extrema yields
+$\delta\ge3B_0^{-m}/n$. On the other hand, the same-order competitor
+$\Kite(k_0+1,n-2k_0-1)$ gives
+\[
+ \delta\le\frac{32}{k_0+4}B_0^{-(n-2k_0-2)}.
+\]
+Consequently $B_0^{b_0-2}\le32n/[3(k_0+4)]$. If $b_0\ge3$, this
+forces $B_0(k_0+4)\le32n/3$, contrary to
+$B_0\sim k_0\sim n/(2\log n)$.
+\end{proof}
+
+\section{Dense terminal cores in a minimizing graph}
+\label{sec:graph-cores}
+
+Fix $\theta=0.99$ and a shortest path $Q=(a=v_0,\ldots,v_d=b)$.
+Define
+\[
+ A_+=N(a)\cap\{w>0\},\qquad B_-=N(b)\cap\{w<0\},\qquad
+ E=V(G)\setminus(V(Q)\cup A_+\cup B_-).
+\]
+Let $I_A$ be the indicator of $v_1\in A_+$ and $I_B$ that of
+$v_{d-1}\in B_-$. Inclusion--exclusion gives the exact identity
+\begin{equation}\label{graph:count}
+ b_0=(|A_+|-k_0)+(|B_-|-k_0)+(2-I_A-I_B)+|E|.
+\end{equation}
+Each term is nonnegative. Thus $|A_+|,|B_-|\le k_0+2$ and $|E|\le2$.
+We use several consequences of shortestness. There is no edge from
+$A_+$ to $B_-$, since such an edge would give $d\le3$.
+A vertex of $A_+$ can have path neighbors only at positions $0,1,2$;
+the reversed assertion holds for $B_-$. In general, the path neighbors
+of any vertex outside a geodesic have indices spanning at most two:
+otherwise the two incident edges would shorten the geodesic. In
+particular there are at most three such neighbors.
+
+\begin{lemma}\label{graph:cores}
+Let
+\[
+ C_1=\{v:w_v\ge\theta M\},\qquad
+ C_2=\{v:w_v\le-\theta M\}.
+\]
+Then, along the minimizing sequence:
+\begin{enumerate}
+\item $|C_i|=k_0+O(1)$, and the minimum degree of $G[C_i]$ is at least
+$0.9|C_i|-1$ eventually;
+\item every vertex of $C_i$ is within distance two of its corresponding
+extremum, and
+\begin{equation}\label{graph:core-deficits}
+ \sum_{v\in C_1}(1-w_v/M)=O(1),\qquad
+ \sum_{v\in C_2}(1+w_v/M)=O(1);
+\end{equation}
+\item the residual graph $G-(C_1\cup C_2)$ has bounded maximum degree
+and bounded adjacency norm. Only $O(1)$ residual vertices meet the cores,
+and every residual coordinate has absolute value less than $\theta M$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Discard the negative neighbor contributions in the equation at $a$.
+This gives
+\begin{equation}\label{graph:neighbor-deficit}
+ \sum_{v\in A_+}(1-w_v/M)
+ \le |A_+|-\lambda_2+\sqrt n\,\delta\le3+o(1).
+\end{equation}
+Since $1-\theta$ is fixed, only $O(1)$ vertices of $A_+$ fail the
+threshold defining $C_1$. The analogous assertion holds at $b$.
+
+For $3\le j\le d-3$, the vertex $v_j$ has at most its two path
+neighbors and the vertices of $E$ as neighbors. Hence its degree is at
+most four, and \eqref{pre:centered} yields
+\[
+ |w_{v_j}|\le\frac{4+\sqrt n\,\delta}{\lambda_2}M<\theta M.
+\]
+A high positive path vertex cannot be among the last three vertices of
+$Q$: its positive neighbors would then be confined to a bounded set.
+Similarly a high negative vertex cannot be at the positive end.
+A high positive vertex in $E$ needs at least
+$\theta\lambda_2-o(1)$ positive neighbors. Outside $A_+$ it has at
+most three path neighbors and one other neighbor in $E$, and no positive
+neighbor in $B_-$. Thus it meets $A_+$ and lies within distance two of
+$a$. Reverse signs for the assertion about $C_2$.
+
+It follows that $C_1$ consists of the high vertices of $A_+$, the
+extremum $a$, and at most a bounded number of further path or $E$
+vertices. This proves its order estimate, its localization, and its
+deficit bound from \eqref{graph:neighbor-deficit}. The same holds for
+$C_2$. Every vertex of $C_1$ needs
+$\theta\lambda_2-o(1)=\theta k_0-O(1)$ positive neighbors. All but
+$O(1)$ of these lie in $C_1$: the remaining possibilities are the
+omitted vertices of $A_+$, a bounded number of path vertices, and $E$.
+The opposite terminal set is too far away to contribute. Hence its
+internal degree is at least $\theta k_0-O(1)$, which is at least
+$0.9|C_1|-1$ eventually. The other core is identical in this respect.
+
+After both cores are removed, only $O(1)$ vertices outside $Q$ remain.
+Each has at most three neighbors on $Q$, so the residual graph has
+bounded maximum degree and therefore bounded norm. The path neighbors
+of a core vertex are confined to the first or last four positions,
+because that core vertex is within distance two of the corresponding
+extremum. Thus only boundedly many residual vertices meet either core.
+Finally, the cores were defined using \emph{all} coordinates at the
+threshold, so every residual coordinate is strictly below it in absolute
+value.
+\end{proof}
+
+\section{Transmission and attachment estimates}
+\label{sec:graph-attachments}
+
+Interchange the two ends if necessary so that $|C_1|=k$ and
+$|C_2|=k+q$, where $q\ge0$. When doing so replace
+$(\mathbf w,\mathbf y,c)$ by $(-\mathbf w,-\mathbf y,-c)$, leaving
+$\mathbf x$ unchanged. Thus $\mathbf w|_{C_1}>0$ and
+$\mathbf w|_{C_2}<0$. By Lemma~\ref{graph:cores}, $q=O(1)$,
+$k=k_0+O(1)$, and $\lambda_1,\lambda_2=k+O(1)$.
+
+Let $\mathcal R=V(G)\setminus(C_1\cup C_2)$,
+$A_i=A(G[C_i])$, and $B=A(G[\mathcal R])$.
+Let $W_i$ be the matrix with rows indexed by $C_i$ and columns by
+$\mathcal R$ that records the edges between these sets. Only boundedly
+many columns are nonzero; consequently $\norm{W_i}^2=O(k)$.
+Write $\mathbf w_i,\mathbf x_i$ for restrictions to $C_i$, and use
+subscript $\mathcal R$ for restrictions to the residual set. Put
+$R_2=(\lambda_2I-B)^{-1}$, which is entrywise nonnegative and has norm
+$O(1/k)$.
+
+Choose a shortest path between $C_1$ and $C_2$, of $L$ edges. Its first
+and last internal vertices are $s_1,s_2$; let $d_i\ge1$ count the
+neighbors of $s_i$ in its adjacent core. Define
+\begin{equation}\label{graph:exception-count}
+ b=n-|C_1|-|C_2|-(L-1)\ge0.
+\end{equation}
+Core localization gives $d-4\le L\le d$. Therefore
+\begin{equation}\label{graph:corridor-scale}
+ b=O(1),\qquad L=n-2k+O(1),\qquad
+ \frac{L}{k\log k}\longrightarrow2.
+\end{equation}
+No internal path vertex other than $s_1,s_2$ meets a core, since that
+would shorten the path. No residual vertex meets both cores. Both
+assertions hold eventually because $L\to\infty$.
+
+\begin{lemma}[Endpoint transmission]\label{graph:transmission}
+Along every minimizing sequence,
+\begin{equation}\label{graph:transmission-bound}
+ \delta\ge\frac2k(\theta^2-o(1))d_1d_2\lambda_1^{-(L-1)}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The residual part of \eqref{pre:centered} is exactly
+\begin{equation}\label{graph:residual-equation}
+ \mathbf w_{\mathcal R}
+ =R_2(W_1^T\mathbf w_1+W_2^T\mathbf w_2+c\delta\mathbf x_{\mathcal R}).
+\end{equation}
+The source from the cores has bounded support and coordinates of
+magnitude $O(kM)$, so its norm is $O(kM)$. The forcing is negligible
+because $|c|/M\le\sqrt n$ and $\delta$ is superpolynomially small.
+It follows that $\norm{\mathbf w_{\mathcal R}}=O(M)$. Thus
+\[
+ 1+c^2=\norm{\mathbf w}^2\le(2k+O(1))M^2,
+ \qquad M^2\ge\frac{1-o(1)}{2k}.
+\]
+The zeroth term of the Neumann series for $R_2$ contributes at least
+$\theta d_1M/\lambda_2$ to $w_{s_1}$ from the positive core. The
+opposite-core source has residual distance at least $L-2$ from $s_1$.
+If there were a shorter residual path, adjoining one edge into each
+core would contradict the choice of $L$. Its total contribution has
+absolute value at most
+\[
+ O(kM)\frac{\norm B^{L-2}}
+ {\lambda_2^{L-1}(1-\norm B/\lambda_2)}.
+\]
+This is smaller than $M$ times every fixed inverse power of $k$, since
+$\norm B=O(1)$ and $L\sim2k\log k$. The forcing term in
+\eqref{graph:residual-equation} has the same property. Therefore
+\[
+ w_{s_1}\ge(\theta-o(1))\frac{d_1M}{\lambda_2},\qquad
+ -w_{s_2}\ge(\theta-o(1))\frac{d_2M}{\lambda_2}.
+\]
+In the full graph the distance between $s_1,s_2$ is exactly $L-2$;
+a shorter path would again yield a shorter walk between the cores.
+Apply \eqref{pre:exact-resistance}, use
+$\phi_{L-3}(\lambda_1)\le\lambda_1^{L-3}$, and discard the factor
+$\lambda_1^2/\lambda_2^2\ge1$. The resulting bound is
+\eqref{graph:transmission-bound}.
+\end{proof}
+
+For $v\in\mathcal R$ let $d_i(v)=|N(v)\cap C_i|$, and define
+\begin{equation}\label{graph:attachment-mass}
+ \sigma_i=\sum_{v\in\mathcal R}\left(\frac{d_i(v)}k\right)^2.
+\end{equation}
+Only boundedly many terms are nonzero.
+
+\begin{lemma}[A finite-rank spectral bound]\label{graph:pole}
+Uniformly over residual vertices,
+\begin{equation}\label{graph:density}
+ d_i(v)/k\le\theta+O(1/k).
+\end{equation}
+Moreover,
+\begin{equation}\label{graph:pole-bound}
+ \lambda_1\le k-1+\min(\sigma_1,q+\sigma_2)+O(1/k).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Each residual vertex has bounded residual degree and meets at most one
+core. By the \emph{total} deficit estimate \eqref{graph:core-deficits},
+the sum of absolute centered coordinates of its neighbors in that core
+is at least $d_i(v)M-O(M)$. Its residual neighbors contribute only
+$O(M)$ in absolute value. Hence the approximate eigenvector equation
+implies
+\[
+ d_i(v)M-O(M)\le\lambda_2|w_v|+|c|\delta x_v
+ \le\theta\lambda_2M+o(M).
+\]
+Since $\lambda_2=k+O(1)$, this proves \eqref{graph:density} even if
+$w_v$ has the sign opposite to that core.
+
+Put $S_{ij}=W_iR_2W_j^T$. Substitution of
+\eqref{graph:residual-equation} in the core equations gives
+\begin{equation}\label{graph:core-equation}
+ (A_i+S_{ii})\mathbf w_i
+ =\lambda_2\mathbf w_i-S_{ij}\mathbf w_j
+ -c\delta(\mathbf x_i+W_iR_2\mathbf x_{\mathcal R}),\qquad j\ne i.
+\end{equation}
+The cross term has a favorable sign: it is nonnegative in the positive
+core equation, and becomes nonnegative after multiplying the negative
+core equation by $-1$. Multiply by a positive unit Perron vector of
+$A_i+S_{ii}$. The denominator from $|\mathbf w_i|$ is at least
+$\theta M$ times the sum of its coordinates. The vector in parentheses
+has uniformly bounded coordinates, as
+$\norm{W_iR_2}=O(k^{-1/2})$. Thus the forcing changes the resulting
+quotient by at most $O(\sqrt n\,\delta)=o(1/k)$, and
+\begin{equation}\label{graph:core-radius}
+ \lambda_2\le\rho(A_i+S_{ii})+o(1/k).
+\end{equation}
+The dense core is connected, so the positive Perron vector used here
+exists; adding $S_{ii}\ge0$ preserves irreducibility.
+
+The resolvent expansion and $\norm{W_i}^2=O(k)$ give
+\[
+ S_{ii}=\lambda_2^{-1}W_iW_i^T+O_{\mathrm{op}}(1/k),\qquad
+ \norm{S_{ii}}=O(1).
+\]
+Write $a_i=|C_i|$ and let $\mathbf u$ be the uniform unit vector on
+$a_i$ coordinates. Since $A_i\le J-I$ entrywise, Perron monotonicity
+and the spectral separation of the uniform direction yield
+\begin{equation}\label{graph:rank-one}
+ \rho(A_i+S_{ii})
+ \le\rho(J-I+S_{ii})
+ \le a_i-1+\mathbf u^TS_{ii}\mathbf u+O(1/k).
+\end{equation}
+Here is an explicit justification of the last error. For a unit vector
+$t\mathbf u+\mathbf v$ with $\mathbf v\perp\mathbf u$, subtract
+$a_i-1+\mathbf u^TS_{ii}\mathbf u$ from its quadratic form. If
+$K=\norm{S_{ii}}=O(1)$, the difference is at most
+$-(a_i-2K)\norm{\mathbf v}^2+2K\norm{\mathbf v}$, whose maximum is
+$K^2/(a_i-2K)=O(1/k)$.
+Finally,
+\[
+ \mathbf u^TS_{ii}\mathbf u
+ =\frac{\sum_v d_i(v)^2}{a_i\lambda_2}+O(1/k)
+ =\sigma_i+O(1/k),
+\]
+because $a_i,\lambda_2=k+O(1)$ and $\sigma_i=O(1)$.
+Combine \eqref{graph:core-radius}--\eqref{graph:rank-one} for both
+cores and use $\lambda_1-\lambda_2=\delta$ to obtain
+\eqref{graph:pole-bound}.
+\end{proof}
+
+
+\section{Completing two dense terminal graphs}
+\label{dense:section}
+
+For disjoint rooted graphs $(H_1,a_1)$ and $(H_2,a_2)$, denote by
+$\mathcal D(H_1,H_2;L)$ the graph obtained by joining the roots by a
+path of $L$ edges, all of whose internal vertices are new.  Thus
+$\mathcal D(K_k,K_k;L)=\Kite(k,L)$, and both graphs have
+$2k+L-1$ vertices when $|V(H_1)|=|V(H_2)|=k$.
+We prove a comparison that does not require the two rooted graphs to
+be isomorphic.
+
+\begin{proposition}\label{dense:completion}
+Suppose that $k\ge1000$, $L\ge10000k$, and $H_1,H_2$ have order $k$
+and minimum degree at least $k-1-k/10$.  If at least one of these
+graphs is incomplete, then
+\[
+ \delta\bigl(\mathcal D(H_1,H_2;L)\bigr)
+ >\delta\bigl(\Kite(k,L)\bigr).
+\]
+\end{proposition}
+
+For a graph $H$ rooted at $a$, put $B_H=A(H-a)$ and let
+$\mathbf a_H$ be its root-incidence vector: its coordinate at
+$v\in V(H-a)$ equals one if $av\in E(H)$ and zero otherwise.
+Define the inverse rooted response by
+\begin{equation}\label{dense:response}
+ F_H(z)=z-\mathbf a_H^T(zI-B_H)^{-1}\mathbf a_H,
+ \qquad z>\rho(B_H).
+\end{equation}
+Here and below $\rho$ denotes the spectral radius of a nonnegative
+symmetric matrix.  Direct differentiation gives
+\begin{equation}\label{dense:response-derivatives}
+ \begin{split}
+ F_H'(z)&=1+\mathbf a_H^T(zI-B_H)^{-2}\mathbf a_H,\\
+ F_H''(z)&=-2\mathbf a_H^T(zI-B_H)^{-3}\mathbf a_H.
+ \end{split}
+\end{equation}
+We use the path functions $r(z)$, $s_L(z)$, and $h_L(z)$ from
+Lemma~\ref{pre:path}; in particular,
+\begin{equation}\label{dense:path-identity}
+ s_L(z)-r(z)=-h_L(z)r(z)^L,
+ \qquad
+ h_L(z)=\frac{(1-r(z)^2)r(z)^{L-1}}{1-r(z)^{2L}}.
+\end{equation}
+
+\begin{lemma}\label{dense:core-estimates}
+Let $H$ have order $k\ge1000$, minimum degree at least $k-1-k/10$,
+and $M$ missing edges.  There is a unique number
+$\alpha_H>\rho(H)$ such that $F_H(\alpha_H)=r(\alpha_H)$.
+Write $\alpha_K$ for this parameter when $H=K_k$. By the rooted
+clique equation in Lemma~\ref{bench:kite} and uniqueness,
+$\alpha_K=\kappa_k$ and $r(\alpha_K)^{-1}=\beta_k$. Then
+\begin{align}
+ 0<\alpha_H-\rho(H)&\le r(\alpha_H)\le\frac2k,
+ &\rho(H)-\rho(B_H)&\ge\frac18,
+ \label{dense:root-gap}\\
+ \alpha_K-\alpha_H&\ge\frac{M}{4k},
+ \label{dense:missing-deficit}\\
+ F_H'(\alpha_H)&\le4k,
+ &F_H'(\alpha_H)&\le k+12M+6.
+ \label{dense:slope}
+\end{align}
+For every $z\ge\alpha_H-1/16$, the response is defined and satisfies
+\begin{equation}\label{dense:log-slope}
+ |F_H''(z)|\le32\bigl(F_H'(z)-1\bigr)\le32F_H'(z).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+We first establish estimates that remain valid as missing edges are
+inserted with weights between zero and one.  Write the resulting
+weighted adjacency matrix as $A=J-I-E$, where $E$ is symmetric and
+nonnegative and every row sum of $E$ is at most $k/10$.
+For $0\le t\le2/k$, let $\xi$ and $\boldsymbol\varphi$ be the Perron
+root and positive unit Perron vector of
+$A+t\mathbf e_a\mathbf e_a^T$.  These matrices are irreducible:
+their underlying graphs have minimum degree greater than
+$(k-1)/2$.  Row sums give
+\[
+ \frac9{10}k-1\le\xi\le k-1+\frac2k.
+\]
+Put $T=\xi+1$ and $S=\sum_j\varphi_j$.  The coordinate equations imply
+\[
+ \varphi_{\max}\le\frac{S}{T-t},
+ \qquad
+ \varphi_{\min}\ge\frac{S-(k/10)\varphi_{\max}}{T}.
+\]
+Consequently
+\begin{equation}\label{dense:coordinates}
+ \frac{\varphi_{\min}}{\varphi_{\max}}
+ \ge 1-\frac{k/10+t}{T}>\frac34,
+ \qquad
+ \frac1{2\sqrt{k}}\le\varphi_j\le\frac2{\sqrt{k}}.
+\end{equation}
+The same calculation on the root-deleted graph uses
+$T\ge(9/10)k-1$ and gives these latter coordinate bounds for its
+unit Perron vector $\mathbf v$ as well.
+During the interpolation, $B_H$ and $\mathbf a_H$ denote the current
+weighted nonroot block and root-incidence vector.  The nonroot
+coordinate equation yields
+\[
+ (\xi I-B_H)\boldsymbol\varphi_{H-a}
+   =\mathbf a_H\varphi_a.
+\]
+Multiplication by $\mathbf v^T$, followed by Cauchy--Schwarz in the
+denominator, gives
+\[
+ \xi-\rho(B_H)
+ =\frac{(\mathbf v^T\mathbf a_H)\varphi_a}
+        {\mathbf v^T\boldsymbol\varphi_{H-a}}
+ \ge\frac{(9/10)k-1}{4k}>\frac18.
+\]
+Taking $t=0$ proves the root-deletion estimate in
+\eqref{dense:root-gap}.
+
+The Perron equation for $H$ shows that $F_H(\rho(H))=0$.
+Since $F_H'>0$ and $r'<0$, the function $F_H-r$ is strictly increasing
+on $[\rho(H),\infty)$, is negative at the left endpoint, and tends
+to infinity.  Its unique zero is $\alpha_H$.  Eliminating the
+nonroot coordinates also proves the equivalent identity
+\begin{equation}\label{dense:ray-perron}
+ \alpha_H
+ =\rho\bigl(A(H)+r(\alpha_H)\mathbf e_a\mathbf e_a^T\bigr).
+\end{equation}
+Indeed the eliminated vector is positive, so its eigenvalue is the
+Perron root.  The variational principle now gives
+$0<\alpha_H-\rho(H)\le r(\alpha_H)$.
+Since $\alpha_H\ge(9/10)k-1$, we have
+$r(\alpha_H)\le2/k$.  Thus the preceding coordinate estimates apply
+to the unit Perron vector in \eqref{dense:ray-perron}.
+
+Insert all $M$ missing edges with a common weight $s\in[0,1]$,
+and denote the parameter and unit Perron vector by
+$\alpha_s$ and $\boldsymbol\varphi(s)$.
+The eigenvalue is simple, and differentiating
+\eqref{dense:ray-perron} gives
+\[
+ \alpha_s'
+ =\frac{2\sum_{uv\text{ missing}}\varphi_u(s)\varphi_v(s)}
+        {1-r'(\alpha_s)\varphi_a(s)^2}.
+\]
+The numerator is at least $M/(2k)$.  Moreover,
+$|r'(\alpha_s)|\le4/k^2$ and $\varphi_a(s)^2\le4/k$, so the
+denominator is at most two.  Integration proves
+\eqref{dense:missing-deficit}.
+
+The eigenvector in \eqref{dense:ray-perron} with root coordinate one is
+\[
+ \left(1,(\alpha_H I-B_H)^{-1}\mathbf a_H\right)^T.
+\]
+Its squared norm is $F_H'(\alpha_H)$, whence
+$F_H'(\alpha_H)=1/\varphi_a^2\le4k$.
+For the sharper estimate, first assume $M\le k$ and put
+$\alpha=\alpha_H$.  The average degree and Perron monotonicity give
+\[
+ k-1-\frac{2M}{k}\le\alpha\le\alpha_K<k.
+\]
+The last strict inequality follows from the maximum row sum
+$k-1+r(\alpha_K)<k$ in \eqref{dense:ray-perron}.
+For the clique,
+\[
+ r(\alpha_K)^{-1}
+   =\frac{k-1}{\alpha_K-k+2}<k-1.
+\]
+Since $r(z)^{-1}$ is increasing,
+$\alpha+1-r(\alpha)=1+r(\alpha)^{-1}<k$.
+The root coordinate equation and
+$\varphi_{\max}/\varphi_{\min}\le2$ imply
+\[
+ \frac{S}{\varphi_a}
+ =\alpha+1-r(\alpha)
+   +\sum_{j:\,aj\text{ missing}}\frac{\varphi_j}{\varphi_a}
+ \le k+2M.
+\]
+As $1=\sum_j\varphi_j^2\le\varphi_{\max}S$ and
+$\varphi_{\max}\le S/(\alpha+1-r(\alpha))$, it follows that
+\[
+ F_H'(\alpha)
+ \le\frac{(k+2M)^2}{k-2M/k-2/k}
+ \le k+12M+6.
+\]
+The denominator is positive.  After clearing it, the last inequality
+is equivalent to positivity of
+\[
+ 8kM-4M^2-2M+6k-2
+ -\frac{24M^2+36M+12}{k}.
+\]
+For $0\le M\le k$ and $k\ge1000$, this expression is at least
+$(4k-27)M+6k-3>0$.  If $M\ge k$, the already established bound
+$F_H'(\alpha_H)\le4k$ is stronger than the claimed estimate.
+Finally,
+$\alpha_H-\rho(B_H)\ge1/8$, so for
+$z\ge\alpha_H-1/16$ the resolvent $(zI-B_H)^{-1}$ is positive
+definite with norm at most $16$.  Applying this to
+\eqref{dense:response-derivatives} proves
+\eqref{dense:log-slope}.
+\end{proof}
+
+\begin{lemma}\label{dense:clique-benchmark}
+For $k\ge1000$ and $L\ge k$,
+\begin{equation}\label{dense:clique-parameter}
+ \frac1{k^2}\le\alpha_K-(k-1)\le\frac2{k^2},
+\end{equation}
+and
+\begin{equation}\label{dense:sharp-benchmark}
+ \delta\bigl(\Kite(k,L)\bigr)
+ \le\frac{2h_L(\alpha_K)}{k-2}.
+\end{equation}
+In addition,
+\begin{equation}\label{dense:coarse-benchmark}
+ \delta\bigl(\Kite(k,L)\bigr)
+ \le2h_L(\alpha_K)\le2(k-2)^{-(L-1)}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write $\alpha=\alpha_K$, $r=r(\alpha)$, $h=h_L(\alpha)$,
+$\varepsilon=\alpha-(k-1)$, and
+$\lambda_j^K=\lambda_j(\Kite(k,L))$.
+The clique response is
+\[
+ F_{K_k}(z)=z-\frac{k-1}{z-k+2},
+\]
+so $F_{K_k}(\alpha)=r$ is equivalent to
+\begin{equation}\label{dense:clique-epsilon}
+ \varepsilon(k+\varepsilon)=r(1+\varepsilon).
+\end{equation}
+We have $0<\varepsilon\le r\le2/k$, and
+$1/k<r\le1/(k-2)$ because $k-1<\alpha<k$.
+Thus \eqref{dense:clique-epsilon} gives
+$\varepsilon>1/k^2$ and
+\[
+ \varepsilon\le\frac{1+2/k}{k(k-2)}\le\frac2{k^2},
+\]
+proving \eqref{dense:clique-parameter}.
+
+Label the joining path $a_0,\ldots,a_L$.
+Give a vector $\mathbf u$ the coordinates $u_{a_j}=r^j$,
+and give each nonroot clique vertex its own root coordinate divided
+by $\alpha-k+2$.  Let $\mathbf v$ be the reflected vector.
+Substitution into the adjacency equations gives
+\[
+ (A-\alpha I)\mathbf u=e\mathbf e_{a_L},
+ \qquad
+ (A-\alpha I)\mathbf v=e\mathbf e_{a_0},
+ \qquad e=(1-r^2)r^{L-1}.
+\]
+The positive-vector bound applied to $\mathbf u+\mathbf v$ gives
+\[
+ \alpha<\lambda_1^K\le\alpha+\frac{e}{1+r^L}.
+\]
+Reflection fixes the positive Perron vector, so
+$\mathbf u-\mathbf v$ is orthogonal to it.  Its Rayleigh quotient,
+using $\lVert\mathbf u-\mathbf v\rVert_2^2\ge2(1-r^L)^2$, gives
+\[
+ \lambda_2^K
+ \ge\alpha-\frac{2e(1-r^L)}{\lVert\mathbf u-\mathbf v\rVert_2^2}
+ \ge\alpha-\frac{e}{1-r^L}.
+\]
+Consequently
+\[
+ \delta\bigl(\Kite(k,L)\bigr)\le2h,
+ \qquad
+ \lambda_1^K,\lambda_2^K\in[\alpha-2h,\alpha+2h].
+\]
+Since $h\le r^{L-1}\le(k-2)^{-(L-1)}$, this proves
+\eqref{dense:coarse-benchmark}.
+
+We shall use the uniform estimate
+\begin{equation}\label{dense:tiny}
+ L(k-2)^{-(L-1)}
+ \le k(k-2)^{-(k-1)}\le k^{-20}
+ \qquad(L\ge k\ge1000).
+\end{equation}
+The expression decreases with integral $L\ge k$, and
+$k-2\ge\sqrt{k}$ proves the second inequality.
+It follows from \eqref{dense:clique-parameter} that
+$\lambda_2^K>k-1$ and that
+$z-k+2\le1+3/k^2$ on $[\alpha-2h,\alpha+2h]$.
+For $Q=F_{K_k}-r$, we therefore have
+\begin{equation}\label{dense:clique-Q-slope}
+ Q'(z)\ge F_{K_k}'(z)
+   =1+\frac{k-1}{(z-k+2)^2}\ge k-1
+\end{equation}
+throughout this interval.
+
+After deleting both roots, the remaining components are two
+$(k-1)$-cliques and the internal path.  Their spectral radii are
+below $k-1<\lambda_2^K$.  The two-root Schur complement and reflection
+symmetry therefore identify the two eigenvalues by
+\begin{align*}
+ Q(\lambda_1^K)
+ &=h_L(\lambda_1^K)\bigl(1-r(\lambda_1^K)^L\bigr),\\
+ Q(\lambda_2^K)
+ &=-h_L(\lambda_2^K)\bigl(1+r(\lambda_2^K)^L\bigr).
+\end{align*}
+Indeed the symmetric root vector belongs to the larger eigenvalue;
+the Schur matrix has inertia $(\text{negative},0)$ at the second,
+so its null vector there is antisymmetric.
+For $z\ge k-1$, differentiation of \eqref{dense:path-identity} gives
+\begin{equation}\label{dense:log-h}
+ 0<-\frac{d}{dz}\log h_L(z)
+ =\frac{(L-1)-2r(z)^2/(1-r(z)^2)
+             +2Lr(z)^{2L}/(1-r(z)^{2L})}
+        {\sqrt{z^2-4}}
+ \le\frac{4L}{k}.
+\end{equation}
+In particular, \eqref{dense:tiny} implies
+\[
+ \frac{h_L(\lambda_2^K)}{h_L(\alpha)}
+ \le\exp(8Lh/k)\le1+\frac1{50k},
+ \qquad
+ r(\lambda_2^K)^L\le(k-2)^{-L}\le\frac1{100k}.
+\]
+Integrating \eqref{dense:clique-Q-slope} between the two eigenvalues,
+and using that $h_L$ decreases, yields
+\[
+ \delta\bigl(\Kite(k,L)\bigr)
+ \le\frac{2h_L(\lambda_2^K)(1+r(\lambda_2^K)^L)}{k-1}
+ \le\frac{2h_L(\alpha_K)}{k-2}.
+\]
+This proves \eqref{dense:sharp-benchmark}.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{dense:completion}]
+Let $G=\mathcal D(H_1,H_2;L)$ and suppose, towards a contradiction,
+that $\delta=\delta(G)\le\delta(\Kite(k,L))$.
+Write $\alpha_i=\alpha_{H_i}$, let $M_i$ be the number of missing
+edges in $H_i$, and put $M=\max(M_1,M_2)\ge1$.
+By \eqref{dense:coarse-benchmark} and \eqref{dense:tiny},
+\begin{equation}\label{dense:small-gap}
+ \delta\le2(k-2)^{-(L-1)},
+ \qquad L\delta\le2k^{-20}.
+\end{equation}
+In this proof $\lambda_1,\lambda_2$ are the two largest eigenvalues
+of $G$.
+
+Since $\lambda_1\ge\rho(H_i)$, the root-deletion estimate gives
+$\lambda_2>\rho(H_i-a_i)$ and $\lambda_2>2$.
+Deleting both roots thus leaves a matrix with spectral radius below
+$\lambda_2$.  Two-vertex interlacing implies
+$\lambda_3<\lambda_2$, so the second eigenvalue is simple.
+On $[\lambda_2,\lambda_1]$, elimination of all nonroot vertices gives
+\begin{equation}\label{dense:schur}
+ \mathcal F(z)=
+ \begin{pmatrix}
+ F_{H_1}(z)-s_L(z)&-h_L(z)\\
+ -h_L(z)&F_{H_2}(z)-s_L(z)
+ \end{pmatrix}.
+\end{equation}
+Its inertia is $(\text{negative},0)$ at $\lambda_2$ and
+$(0,\text{positive})$ at $\lambda_1$.
+Furthermore $\mathcal F'(z)\succeq I$.
+The path contribution to this derivative has norm at most
+$(\lambda_2-2)^{-2}$: the attachment columns at the two distinct
+ends of the internal path are orthonormal, and the path resolvent
+has norm at most $(\lambda_2-2)^{-1}$.
+
+If $z\ge\alpha_i$, then $F_{H_i}'(z)\le4k$ by
+\eqref{dense:response-derivatives} and \eqref{dense:slope}.
+If $z<\alpha_i$, we still have
+\[
+ z\ge\lambda_2\ge\rho(H_i)-\delta
+   \ge\alpha_i-2/k-\delta.
+\]
+This lies above $\alpha_i-1/16$.
+Integrating \eqref{dense:log-slope} gives
+$F_{H_i}'(z)\le4k\exp(32(2/k+\delta))<8k$.
+Including the path contribution, we obtain
+\begin{equation}\label{dense:rough-matrix-slope}
+ I\preceq\mathcal F'(z)\preceq10kI
+ \qquad(\lambda_2\le z\le\lambda_1).
+\end{equation}
+Lemma~\ref{pre:schur} therefore gives
+\[
+ 0\le\mathcal F_{ii}(\lambda_1)\le10k\delta,
+ \qquad h_L(\lambda_1)\le5k\delta.
+\]
+Using \eqref{dense:path-identity}, we find
+\[
+ -h_L(\lambda_1)r(\lambda_1)^L
+ \le F_{H_i}(\lambda_1)-r(\lambda_1)\le10k\delta.
+\]
+The function $F_{H_i}-r$ has derivative at least one and zero
+$\alpha_i$.  Hence
+\begin{equation}\label{dense:resonance}
+ |\lambda_1-\alpha_i|\le10k\delta\qquad(i=1,2).
+\end{equation}
+Thus proximity of the two rooted parameters follows from the
+hypothetical small gap; it has not been assumed.
+
+Every $z\in[\lambda_2,\lambda_1]$ is within $11k\delta$ of each
+$\alpha_i$.  Since $M_i\le k^2/20$,
+$k+12M_i+6\le k^2$.  Equations \eqref{dense:slope} and
+\eqref{dense:log-slope} show that the increase in either scalar
+derivative from its value at $\alpha_i$ is at most
+\[
+ k^2\bigl(\exp(352k\delta)-1\bigr)<1,
+\]
+where the last inequality follows from \eqref{dense:small-gap}.
+The path contribution is also less than one.  It follows that
+\begin{equation}\label{dense:sharp-matrix-slope}
+ \mathcal F'(z)\preceq\bigl(k+20(M+1)\bigr)I.
+\end{equation}
+A second application of Lemma~\ref{pre:schur} gives
+\begin{equation}\label{dense:gap-lower}
+ \delta\ge\frac{2h_L(\lambda_1)}{k+20(M+1)}.
+\end{equation}
+
+Apply \eqref{dense:missing-deficit} to a core with $M$ missing edges.
+Together with \eqref{dense:resonance}, this gives
+\begin{equation}\label{dense:radius-loss}
+ \lambda_1\le\alpha_K-\frac{M}{4k}+10k\delta<\alpha_K,
+\end{equation}
+since $10k\delta<1/(8k)\le M/(8k)$.
+For $z\in[\lambda_1,\alpha_K]$,
+\[
+ -\frac{d}{dz}\log r(z)=\frac1{\sqrt{z^2-4}}\ge\frac1k,
+\]
+as $\alpha_K<k$.  Also $r(\lambda_1)\le2/k$.
+In the ratio $h_L(\lambda_1)/h_L(\alpha_K)$, the factor involving
+$1-r^{2L}$ is at least one, while the logarithm of the ratio of the
+$1-r^2$ factors is at least $-20/k^2$.  Therefore
+\begin{align*}
+ \log\frac{h_L(\lambda_1)}{h_L(\alpha_K)}
+ &\ge\frac{(L-1)(\alpha_K-\lambda_1)}{k}-\frac{20}{k^2}\\
+ &\ge\frac{M(L-1)}{4k^2}-10L\delta-\frac{20}{k^2}.
+\end{align*}
+Combining \eqref{dense:sharp-benchmark} and
+\eqref{dense:gap-lower}, we conclude that
+\begin{align*}
+ \log\frac{\delta(G)}{\delta(\Kite(k,L))}
+ &\ge\frac{M(L-1)}{4k^2}-10L\delta-\frac{20}{k^2}
+       -\log\frac{k+20(M+1)}{k-2}\\
+ &\ge\frac{M(L-1)}{4k^2}-10L\delta
+       -\frac{20(M+1)+3}{k}-\frac{20}{k^2}.
+\end{align*}
+Here we used
+\[
+ \log\frac{k+20(M+1)}{k-2}
+ =\log\left(1+\frac{20(M+1)}k\right)
+  -\log\left(1-\frac2k\right)
+ \le\frac{20(M+1)+3}{k}.
+\]
+Finally, $L-1\ge9999k$ and $L\delta\le2k^{-20}$ show that the
+last lower bound is at least
+\[
+ \frac{9919M-92}{4k}-\frac{20}{k^2}-20k^{-20}
+ >\frac{2400M}{k}>0.
+\]
+This contradicts $\delta(G)\le\delta(\Kite(k,L))$ and proves the
+proposition.
+\end{proof}
+
+\section{Proof of the graph theorem}\label{sec:graph-conclusion}
+
+\begin{proof}[Proof of Theorem~\ref{thm:graphs}]
+Suppose there are non-double-kite minimizers at arbitrarily large
+orders, and choose a sequence of them. Apply the preceding graph
+reductions. With their notation, the graph
+$K=\Kite(k,L+b+q)$ has the same order as $G$. The sharp clique
+benchmark in Lemma~\ref{dense:clique-benchmark} gives
+\[
+ \delta(K)\le\frac2k(1+o(1))\beta_k^{-(L+b+q-1)},
+ \qquad\beta_k=k-1+O(1/k).
+\]
+Dividing the transmission bound \eqref{graph:transmission-bound} by
+this estimate, and taking logarithms, gives
+\begin{align}
+ \log\frac{\delta(G)}{\delta(K)}
+ \ge{}&\log\theta^2+\log(d_1d_2)+(b+q)\log\beta_k\notag\\
+ &-(L-1)\log(\lambda_1/\beta_k)+o(1).
+ \label{graph:comparison-exact}
+\end{align}
+The spectral bound \eqref{graph:pole-bound} implies
+\[
+ \log(\lambda_1/\beta_k)
+ \le\frac{\min(\sigma_1,q+\sigma_2)}k+O(1/k^2).
+\]
+Since $L/k=2\log k+o(\log k)$, and $b+q=O(1)$, it follows that
+\begin{align}
+ \log\frac{\delta(G)}{\delta(K)}
+ \ge{}&\log\theta^2+\log(d_1d_2)+(b+q)\log k\notag\\
+ &-(2\log k+o(\log k))\min(\sigma_1,q+\sigma_2)+o(1).
+ \label{graph:comparison}
+\end{align}
+In particular the $O(1/k)$ error in the spectral estimate contributes
+only $O(\log k/k)=o(1)$ here.
+
+Pass to a subsequence on which the bounded integers $b,q$ are fixed.
+Label the $b$ residual vertices outside the shortest core path in any
+order. Passing to a further subsequence, all their attachment densities,
+the two endpoint densities $d_i/k$, and the two numbers
+$\log d_i/\log k$ converge. Write
+\[
+ d_i/k\to t_i,\qquad \frac{\log d_i}{\log k}\to\alpha_i\in[0,1],
+ \qquad \sigma_i\to t_i^2+H_i,
+\]
+where $H_i$ is the sum of squared limiting densities of off-path
+vertices attached to core $i$. If $t_i>0$, then $\alpha_i=1$.
+By \eqref{graph:density}, each limiting density is at most $\theta$.
+Each off-path vertex meets at most one core, so
+$H_1+H_2\le b\theta^2$.
+
+The limiting coefficient of $\log k$ on the right of
+\eqref{graph:comparison} is
+\[
+ P=b+q+\alpha_1+\alpha_2
+ -2\min(t_1^2+H_1,q+t_2^2+H_2).
+\]
+Using $2\min(u,v)\le u+v$ gives the useful decomposition
+\begin{equation}\label{graph:coefficient}
+ P\ge b(1-\theta^2)+
+ (\alpha_1-t_1^2)+(\alpha_2-t_2^2).
+\end{equation}
+Each summand on the right is nonnegative. If $t_i=0$, its contribution
+is $\alpha_i$; if $t_i>0$, it is $1-t_i^2\ge1-\theta^2>0$.
+Consequently $P>0$ if $b>0$, if either $t_i>0$, or if either
+$\alpha_i>0$. In any of these cases \eqref{graph:comparison} tends
+to $+\infty$, contradicting minimality, which requires the logarithmic
+ratio to be nonpositive. If all these quantities vanish but $q>0$,
+then $H_1=H_2=0$ and the exact expression gives $P=q>0$, again a
+contradiction.
+
+The only possible remaining subsequence therefore has $b=q=0$ and
+$\alpha_1=\alpha_2=0$. Now $d_i=k^{o(1)}$. There are no off-path
+vertices, so
+$\sigma_i=d_i^2/k^2=k^{-2+o(1)}$; its entire logarithmic penalty in
+\eqref{graph:comparison} is $o(1)$. We conclude that
+\[
+ \frac{\delta(G)}{\delta(K)}
+ \ge\theta^2d_1d_2(1-o(1)).
+\]
+If the integer product $d_1d_2$ is at least two on a further
+subsequence, this exceeds one because $2\theta^2>1$. Thus
+$d_1=d_2=1$ eventually.
+
+Every residual vertex now lies on the shortest path between the two
+cores. That path is induced; shortestness excludes every other
+core-to-path edge. The two endpoint attachments are single edges, the
+cores have equal order $k$, and there are no edges between the cores.
+Thus $G=\mathcal D(G[C_1],G[C_2];L)$ in the notation of
+Section~\ref{dense:section}. Lemma~\ref{graph:cores} gives the
+required core minimum degrees. Since $L/(k\log k)\to2$, eventually
+$k\ge1000$ and $L\ge10000k$. Proposition~\ref{dense:completion}
+forces both cores to be complete, contradicting the choice of the
+sequence.
+
+The same reasoning applies to any sequence of exceptional minimizers.
+Their existence at unbounded orders is therefore impossible, proving
+the existence of one $N_{\mathcal G}$ valid for every minimizer.
+The parameter asymptotics follow from $k=k_0+O(1)$,
+\eqref{graph:scale-eq}, and $n=2k+L-1$.
+\end{proof}
+
+\section{Scope of the conclusions}
+Theorems~\ref{thm:trees} and \ref{thm:graphs} identify every minimizing
+graph in their respective classes at all sufficiently large orders.
+The proofs give existence of thresholds and do not determine the
+remaining finite ranges. They also leave open whether the optimizing
+integer parameter is unique at every sufficiently large order.
+All comparisons above are between graphs of the same order; none of
+the structural conclusions requires a numerical enumeration.
+
+\bibliographystyle{plainnat}
+\bibliography{spectral_gap_trees_and_graphs}
+\end{document}
